@@ -92,15 +92,10 @@ O seguinte fluxograma fornece um processo de decisão para otimizar a performanc
 ![Fluxograma de Decisão](resources/fluxograma.png)
 
 1. **Steps Paralelos:** Verifique se o job tem steps independentes.
-    `EM PROGRESSO...`
 2. **Gargalo são operações de I/O?:** Determine se o gargalo é devido a operações de I/O.
-    `EM PROGRESSO...`
 3. **Gargalo é o processador?:** Determine se o gargalo é o processador.
-    `EM PROGRESSO...`
 4. **Possui alta latência de rede?:** Verifique se há alta latência de rede.
-    `EM PROGRESSO...`
 5. **Precisa de restart?:** Determine se o job precisa ser reiniciado.
-    `EM PROGRESSO...`
 
 Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimização como steps paralelos, remote chunking, processamento assíncrono e multithreading.
 
@@ -109,10 +104,25 @@ Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimiza
 Este repositório inclui vários projetos de exemplo demonstrando as diferentes estratégias de otimização de performance:
 
 - **Exemplo de Steps Paralelos:** Demonstra como configurar e executar steps paralelos.
+  ```java
+    EM PROGRESSO...
+  ```
 - **Exemplo de Remote Chunking:** Mostra como configurar o remote chunking usando Spring Integration.
+  ```java
+    EM PROGRESSO...
+  ```
 - **Exemplo de Processamento Assíncrono:** Fornece um exemplo de execução de steps assíncronos.
+  ```java
+    EM PROGRESSO...
+  ```
 - **Exemplo de Multithreading:** Ilustra como usar multithreading dentro de um step.
+  ```java
+    EM PROGRESSO...
+  ```
 - **Exemplo de Partitioning Local:** Demonstra como particionar dados e processar partições em paralelo.
+  ```java
+    EM PROGRESSO...
+  ```
 
 ## Conclusão
 
