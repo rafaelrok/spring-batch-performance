@@ -2,6 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/BdPartitionerLocalJob/BdPartitionerLocalJob.iml" filepath="$PROJECT_DIR$/BdPartitionerLocalJob/BdPartitionerLocalJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BdPartitionerRemoteJob/BdPartitionerRemoteJob.iml" filepath="$PROJECT_DIR$/BdPartitionerRemoteJob/BdPartitionerRemoteJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MigracaoDadosJob/MigracaoDadosJob.iml" filepath="$PROJECT_DIR$/MigracaoDadosJob/MigracaoDadosJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MultithreadingStep/MultithreadingStep.iml" filepath="$PROJECT_DIR$/MultithreadingStep/MultithreadingStep.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ParallelStepsJob/ParallelStepsJob.iml" filepath="$PROJECT_DIR$/ParallelStepsJob/ParallelStepsJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RemoteChunkingJob/RemoteChunkingJob.iml" filepath="$PROJECT_DIR$/RemoteChunkingJob/RemoteChunkingJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SimplePartitionerLocalJob/SimplePartitionerLocalJob.iml" filepath="$PROJECT_DIR$/SimplePartitionerLocalJob/SimplePartitionerLocalJob.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SimplePartitionerLocalJob2/SimplePartitionerLocalJob2.iml" filepath="$PROJECT_DIR$/SimplePartitionerLocalJob2/SimplePartitionerLocalJob2.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spring-batch-performance.iml" filepath="$PROJECT_DIR$/.idea/spring-batch-performance.iml" />
     </modules>
   </component>

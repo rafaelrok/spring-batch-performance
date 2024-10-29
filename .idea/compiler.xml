@@ -10,15 +10,13 @@
         <module name="SimplePartitionerLocalJob" />
         <module name="ParallelStepsJob" />
         <module name="MultithreadingStep" />
+        <module name="RemoteChunkingJob" />
         <module name="ProcessamentoAsync" />
         <module name="BdPartitionerLocalJob" />
         <module name="BdPartitionerRemoteJob" />
         <module name="MigracaoDadosJob" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="RemoteChunkingJob" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
