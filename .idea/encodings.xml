@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/BdPartitionerLocalJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/BdPartitionerRemoteJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MigracaoDadosJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/MultithreadingStep/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ParallelStepsJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ProcessamentoAsync/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/RemoteChunkingJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimplePartitionerLocalJob/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SimplePartitionerLocalJob2/src/main/java" charset="UTF-8" />
+  </component>
+</project>
