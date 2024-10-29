@@ -14,7 +14,7 @@ public class ArquivoDadosBancariosReaderConfig {
 	public FlatFileItemReader<DadosBancarios> dadosBancariosReader() {
 		return new FlatFileItemReaderBuilder<DadosBancarios>()
 				.name("dadosBancariosReader")
-				.resource(new FileSystemResource("files/dados_bancarios.csv"))
+				.resource(new FileSystemResource("./MultithreadingStep/files/dados_bancarios.csv"))
 				.delimited()
 				.names("pessoaId", "agencia", "conta", "banco", "id")
 				.addComment("--")

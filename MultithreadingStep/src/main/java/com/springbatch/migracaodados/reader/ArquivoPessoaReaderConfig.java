@@ -19,7 +19,7 @@ public class ArquivoPessoaReaderConfig {
 	public FlatFileItemReader<Pessoa> arquivoPessoaReader() {
 		return new FlatFileItemReaderBuilder<Pessoa>()
 				.name("arquivoPessoaReader")
-				.resource(new FileSystemResource("files/pessoas.csv"))
+				.resource(new FileSystemResource("./MultithreadingStep/files/pessoas.csv"))
 				.delimited()
 				.names("nome", "email", "dataNascimento", "idade", "id")
 				.addComment("--")

@@ -6,13 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="MultithreadingStep" />
         <module name="MigracaoDadosJob" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="BdPartitionerLocalJob" target="1.8" />
       <module name="BdPartitionerRemoteJob" target="1.8" />
-      <module name="MultithreadingStep" target="1.8" />
       <module name="ParallelStepsJob" target="1.8" />
       <module name="ProcessamentoAsync" target="1.8" />
       <module name="RemoteChunkingJob" target="1.8" />

@@ -14,7 +14,7 @@ public class ArquivoPessoasInvalidasWriterConfig {
 	public FlatFileItemWriter<Pessoa> arquivoPessoasInvalidasWriter() {
 		return new FlatFileItemWriterBuilder<Pessoa>()
 				.name("arquivoPessoasInvalidasWriter")
-				.resource(new FileSystemResource("files/pessoas_invalidas.csv"))
+				.resource(new FileSystemResource("./MultithreadingStep/files/pessoas_invalidas.csv"))
 				.delimited()
 				.names("id")
 				.build();
