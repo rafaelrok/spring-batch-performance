@@ -8,13 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ParallelStepsJob" />
         <module name="MultithreadingStep" />
+        <module name="ProcessamentoAsync" />
         <module name="MigracaoDadosJob" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="BdPartitionerLocalJob" target="1.8" />
       <module name="BdPartitionerRemoteJob" target="1.8" />
-      <module name="ProcessamentoAsync" target="1.8" />
       <module name="RemoteChunkingJob" target="1.8" />
       <module name="SimplePartitionerLocalJob" target="1.8" />
       <module name="SimplePartitionerLocalJob2" target="1.8" />
