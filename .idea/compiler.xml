@@ -6,17 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SimplePartitionerLocalJob2" />
-        <module name="SimplePartitionerLocalJob" />
-        <module name="ParallelStepsJob" />
-        <module name="RemoteChunkingJob" />
-        <module name="MultithreadingStep" />
-        <module name="BdPartitionerLocalJob" />
-        <module name="BdPartitionerRemoteJob" />
-        <module name="ProcessamentoAsync" />
         <module name="MigracaoDadosJob" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="BdPartitionerLocalJob" target="1.8" />
+      <module name="BdPartitionerRemoteJob" target="1.8" />
+      <module name="MultithreadingStep" target="1.8" />
+      <module name="ParallelStepsJob" target="1.8" />
+      <module name="ProcessamentoAsync" target="1.8" />
+      <module name="RemoteChunkingJob" target="1.8" />
+      <module name="SimplePartitionerLocalJob" target="1.8" />
+      <module name="SimplePartitionerLocalJob2" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
