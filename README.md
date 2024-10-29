@@ -92,10 +92,15 @@ O seguinte fluxograma fornece um processo de decisão para otimizar a performanc
 ![Fluxograma de Decisão](resources/fluxograma.png)
 
 1. **Steps Paralelos:** Verifique se o job tem steps independentes.
+    `EM PROGRESSO...`
 2. **Gargalo são operações de I/O?:** Determine se o gargalo é devido a operações de I/O.
+    `EM PROGRESSO...`
 3. **Gargalo é o processador?:** Determine se o gargalo é o processador.
+    `EM PROGRESSO...`
 4. **Possui alta latência de rede?:** Verifique se há alta latência de rede.
+    `EM PROGRESSO...`
 5. **Precisa de restart?:** Determine se o job precisa ser reiniciado.
+    `EM PROGRESSO...`
 
 Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimização como steps paralelos, remote chunking, processamento assíncrono e multithreading.
 
