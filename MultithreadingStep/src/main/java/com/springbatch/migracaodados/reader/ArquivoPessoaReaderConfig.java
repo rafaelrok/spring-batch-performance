@@ -15,6 +15,13 @@ import com.springbatch.migracaodados.dominio.Pessoa;
 
 @Configuration
 public class ArquivoPessoaReaderConfig {
+
+	/**
+	 * Método responsável por criar um Reader para leitura de pessoas.
+	 * .saveState(false): Não salva o estado da leitura, pois não é sincronizados e não é thread-safe. Então deve ser desabilitado.
+	 * obs.: Esta sendo feito essa configuração pois não é possivel restartar o Job.
+	 */
+
 	@Bean
 	public FlatFileItemReader<Pessoa> arquivoPessoaReader() {
 		return new FlatFileItemReaderBuilder<Pessoa>()
@@ -23,6 +30,7 @@ public class ArquivoPessoaReaderConfig {
 				.delimited()
 				.names("nome", "email", "dataNascimento", "idade", "id")
 				.addComment("--")
+				.saveState(false)
 				.fieldSetMapper(fieldSetMapper())
 				.build();
 	}

@@ -10,6 +10,13 @@ import com.springbatch.migracaodados.dominio.DadosBancarios;
 
 @Configuration
 public class ArquivoDadosBancariosReaderConfig {
+
+	/**
+	 * Método responsável por criar um Reader para leitura de dados bancários.
+	 * .saveState(false): Não salva o estado da leitura, pois não é sincronizados e não é thread-safe. Então deve ser desabilitado.
+	 * obs.: Esta sendo feito essa configuração pois não é possivel restartar o Job.
+	 */
+
 	@Bean
 	public FlatFileItemReader<DadosBancarios> dadosBancariosReader() {
 		return new FlatFileItemReaderBuilder<DadosBancarios>()
@@ -18,6 +25,7 @@ public class ArquivoDadosBancariosReaderConfig {
 				.delimited()
 				.names("pessoaId", "agencia", "conta", "banco", "id")
 				.addComment("--")
+				.saveState(false)
 				.targetType(DadosBancarios.class)
 				.build();
 	}

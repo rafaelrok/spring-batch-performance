@@ -111,23 +111,110 @@ Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimiza
 
 Este repositório inclui vários projetos de exemplo demonstrando as diferentes estratégias de otimização de performance:
 
-- **Exemplo de Steps Paralelos:** Demonstra como configurar e executar steps paralelos.
+- Exemplo de **Steps Paralelos:** Demonstra como configurar e executar steps paralelos.
   ```java
     EM PROGRESSO...
   ```
-- **Exemplo de Remote Chunking:** Mostra como configurar o remote chunking usando Spring Integration.
+- Exemplo de **Remote Chunking:** Mostra como configurar o remote chunking usando Spring Integration.
   ```java
     EM PROGRESSO...
   ```
-- **Exemplo de Processamento Assíncrono:** Fornece um exemplo de execução de steps assíncronos.
+- Exemplo de **Processamento Assíncrono:** Fornece um exemplo de execução de steps assíncronos.
   ```java
     EM PROGRESSO...
   ```
-- **Exemplo de Multithreading:** Ilustra como usar multithreading dentro de um step.
-  ```java
-    EM PROGRESSO...
+- Exemplo de **Multithreading:** Ilustra como usar multithreading dentro de um step.
+#### Classe de configuração do TaskExecutor: 
+```java
+  @Configuration
+  public class TaskExecutorConfig {
+  
+      /**
+       * TODO: Método responsável por criar um TaskExecutor para ser utilizado na execução de tarefas em paralelo, Efetuando uma escalabilidade vertical de desempenho.
+       * setCorePoolSize: Aqui é informado o numero de threads que deve ser criado ao executar as tarefas.
+       * setQueueCapacity: Aqui é informado o numero de tarefas que podem ser enfileiradas.
+       * setMaxPoolSize: Aqui é informado o numero máximo de threads que podem ser criadas.
+       * @return TaskExecutor - TaskExecutor que será utilizado para executar as tarefas em paralelo.
+       */
+  
+      @Bean
+      public TaskExecutor taskExecutor() {
+          ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+          taskExecutor.setCorePoolSize(4);
+          taskExecutor.setQueueCapacity(4);
+          taskExecutor.setMaxPoolSize(4);
+          taskExecutor.setThreadNamePrefix("task_executor_Multithread-");
+          return taskExecutor;
+      }
+  }
   ```
-- **Exemplo de Partitioning Local:** Demonstra como particionar dados e processar partições em paralelo.
+#### Configuração do taskExecutor nos Steps Dados Bancrios e pessoas:
+```java
+  @Bean
+public Step migrarDadosBancariosStep(ItemReader<DadosBancarios> arquivoDadosBancariosReader,
+                                     ItemWriter<DadosBancarios> bancoDadosBancariosWriter,
+                                     @Qualifier("taskExecutor") TaskExecutor taskExecutor) {
+  return stepBuilderFactory
+          .get("migrarDadosBancariosStep")
+          .<DadosBancarios, DadosBancarios>chunk(1000)
+          .reader(arquivoDadosBancariosReader)
+          .writer(bancoDadosBancariosWriter)
+          .taskExecutor(taskExecutor)
+          .transactionManager(transactionManagerApp)
+          .build();
+}
+```
+  ```java
+    @Bean
+    public Step migrarPessoaStep(
+            ItemReader<Pessoa> arquivoPessoaReader,
+            ClassifierCompositeItemWriter<Pessoa> pessoaClassifierWriter,
+            ItemProcessor<Pessoa, Pessoa> pessoaProcessor,
+            FlatFileItemWriter<Pessoa> arquivoPessoasInvalidasWriter,
+            @Qualifier("taskExecutor") TaskExecutor taskExecutor) {
+      return stepBuilderFactory
+              .get("migrarPessoaStep")
+              .<Pessoa, Pessoa>chunk(1000)
+              .reader(arquivoPessoaReader)
+              .writer(pessoaClassifierWriter)
+              .taskExecutor(taskExecutor)
+              .stream(arquivoPessoasInvalidasWriter)
+              .transactionManager(transactionManagerApp)
+              .build();
+    }
+  ```
+#### Configuração do .saveState(false) nos Reader: Não salva o estado da leitura, pois não é sincronizados e não é thread-safe. Então deve ser desabilitado.
+obs.: Esta sendo feito essa configuração pois não é possivel restartar o Job.
+```java
+    @Bean
+	public FlatFileItemReader<Pessoa> arquivoPessoaReader() {
+		return new FlatFileItemReaderBuilder<Pessoa>()
+				.name("arquivoPessoaReader")
+				.resource(new FileSystemResource("./MultithreadingStep/files/pessoas.csv"))
+				.delimited()
+				.names("nome", "email", "dataNascimento", "idade", "id")
+				.addComment("--")
+				.saveState(false)
+				.fieldSetMapper(fieldSetMapper())
+				.build();
+	}
+```
+```java
+    @Bean
+	public FlatFileItemReader<DadosBancarios> dadosBancariosReader() {
+		return new FlatFileItemReaderBuilder<DadosBancarios>()
+				.name("dadosBancariosReader")
+				.resource(new FileSystemResource("./MultithreadingStep/files/dados_bancarios.csv"))
+				.delimited()
+				.names("pessoaId", "agencia", "conta", "banco", "id")
+				.addComment("--")
+				.saveState(false)
+				.targetType(DadosBancarios.class)
+				.build();
+	}
+```
+
+- Exemplo de **Partitioning Local:** Demonstra como particionar dados e processar partições em paralelo.
   ```java
     EM PROGRESSO...
   ```
