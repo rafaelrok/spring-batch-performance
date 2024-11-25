@@ -213,6 +213,11 @@ obs.: Esta sendo feito essa configuração pois não é possivel restartar o Job
 				.build();
 	}
 ```
+#### Aqui está o resultado do processamento Multithreading, antes e depois da implementação do TaskExecutor como técnica de escalabilidade vertical de desempenho.
+Antes da implementação do TaskExecutor, onde é possível observar o tempo de processamento de **`30s`**.
+![Teste Multithreading](resources/multithreading-1.png)
+Resultando após implementação do TaskExecutor, onde é possível observar o tempo de processamento reduzido de **`30s`** para **`9s`**. Isso em uma escala maior de produção poder reduzir em muito o tempo de processamento.
+![Teste Multithreading](resources/multithreading-2.png)
 
 - Exemplo de **Partitioning Local:** Demonstra como particionar dados e processar partições em paralelo.
   ```java
