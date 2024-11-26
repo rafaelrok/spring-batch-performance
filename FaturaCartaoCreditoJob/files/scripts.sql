@@ -15,6 +15,11 @@ CREATE TABLE `transacao` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+drop table if exists fatura;
+CREATE TABLE `fatura` (
+    `valor` float NOT NULL,
+    `data` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `cartao_credito` (`numero_cartao_credito`, `cliente`) VALUES (1500573, 1);
 INSERT INTO `cartao_credito` (`numero_cartao_credito`, `cliente`) VALUES (2811036, 2);

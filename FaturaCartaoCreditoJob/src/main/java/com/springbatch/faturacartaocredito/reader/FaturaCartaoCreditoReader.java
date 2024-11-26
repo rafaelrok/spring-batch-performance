@@ -23,13 +23,13 @@ public class FaturaCartaoCreditoReader implements ItemStreamReader<FaturaCartaoC
 		FaturaCartaoCredito faturaCartaoCredito = null;
 		Transacao transacao = transacaoAtual;
 		transacaoAtual = null;
-		
+
 		if (transacao != null) {
 			faturaCartaoCredito = new FaturaCartaoCredito();
 			faturaCartaoCredito.setCartaoCredito(transacao.getCartaoCredito());
 			faturaCartaoCredito.setCliente(transacao.getCartaoCredito().getCliente());
 			faturaCartaoCredito.getTransacoes().add(transacao);
-			
+
 			while (isTransacaoRelacionada(transacao))
 				faturaCartaoCredito.getTransacoes().add(transacaoAtual);
 		}
@@ -46,17 +46,17 @@ public class FaturaCartaoCreditoReader implements ItemStreamReader<FaturaCartaoC
 	}
 
 	@Override
-	public void open(ExecutionContext executionContext) throws ItemStreamException {
+	public synchronized void open(ExecutionContext executionContext) throws ItemStreamException {
 		delegate.open(executionContext);
 	}
 
 	@Override
-	public void update(ExecutionContext executionContext) throws ItemStreamException {
+	public synchronized void update(ExecutionContext executionContext) throws ItemStreamException {
 		delegate.update(executionContext);
 	}
 
 	@Override
-	public void close() throws ItemStreamException {
+	public synchronized void close() throws ItemStreamException {
 		delegate.close();
 	}
 
