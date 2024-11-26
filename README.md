@@ -112,9 +112,56 @@ Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimiza
 Este repositório inclui vários projetos de exemplo demonstrando as diferentes estratégias de otimização de performance:
 
 - Exemplo de **Steps Paralelos:** Demonstra como configurar e executar steps paralelos.
+  No Spring Batch, a estratégia de steps paralelos permite que múltiplos steps sejam executados simultaneamente, o que pode melhorar a performance do processamento de grandes volumes de dados. No seu projeto, isso é configurado usando o Flow e o SimpleAsyncTaskExecutor.  Aqui está um resumo de como isso funciona no seu projeto:  
+  - Definição dos Steps: Você tem dois steps definidos, `migrarPessoaStep` e `migrarDadosBancariosStep`, que são responsáveis por processar dados de pessoas e dados bancários, respectivamente.  
+  - Configuração dos `Flows`: Cada step é encapsulado em um Flow usando o FlowBuilder. Isso permite que os steps sejam gerenciados como unidades de trabalho independentes.  
+  - Configuração do Executor: O `SimpleAsyncTaskExecutor` é usado para executar os flows em paralelo. Este executor cria novas threads para cada flow, permitindo que eles sejam executados simultaneamente.  
+  - Combinação dos `Flows`: Os flows são combinados usando o método split, que recebe o `SimpleAsyncTaskExecutor` como parâmetro. Isso indica ao Spring Batch que os flows devem ser executados em paralelo.  
+  - Criação do Job: O job é configurado para iniciar com os steps paralelos e finalizar com o método end. O `RunIdIncrementer` é usado para garantir que cada execução do job tenha um ID único.  
+  
+  #### Aqui está um exemplo de como isso é configurado no seu arquivo ParallelStepJobConfig.java:
   ```java
-    EM PROGRESSO...
+    @Bean
+    public Job parallelStepJob(@Qualifier("migrarPessoaStep") Step migrarPessoaStep,
+    @Qualifier("migrarDadosBancariosStep") Step migrarDadosBancariosStep) {
+    return jobBuilderFactory
+    .get("parallelStepJob")
+    .start(stepsParalelos(migrarPessoaStep, migrarDadosBancariosStep))
+    .end()
+    .incrementer(new RunIdIncrementer())
+    .build();
+    }
+  
+    private Flow stepsParalelos(Step migrarPessoaStep, Step migrarDadosBancariosStep) {
+    Flow migrarPessoaFlow = migrarPessoaFlow(migrarPessoaStep);
+    Flow migrarDadosBancariosFlow = migrarDadosBancariosFlow(migrarDadosBancariosStep);
+  
+      return new FlowBuilder<Flow>("stepsParalelos")
+              .start(migrarPessoaFlow)
+              .split(new SimpleAsyncTaskExecutor())
+              .add(migrarDadosBancariosFlow)
+              .build();
+    }
+    
+    private Flow migrarPessoaFlow(Step migrarPessoaStep) {
+    return new FlowBuilder<Flow>("migrarPessoaFlow")
+    .start(migrarPessoaStep)
+    .build();
+    }
+    
+    private Flow migrarDadosBancariosFlow(Step migrarDadosBancariosStep) {
+    return new FlowBuilder<Flow>("migrarDadosBancariosFlow")
+    .start(migrarDadosBancariosStep)
+    .build();
+    }
   ```
+  Essa configuração permite que os steps migrarPessoaStep e migrarDadosBancariosStep sejam executados em paralelo, melhorando a eficiência do processamento.
+  ##### Aqui a diferença de tempo de execução do job antes e depois da implementação de steps paralelos:
+    ![Teste Steps Paralelos](resources/StepsParellelSequencial-1.png)
+    Diferença houve uma redução da metade do tempo de execução do job, de **`30s`** para **`13s`**.
+    ![Teste Steps Paralelos](resources/StepsParellelSequencial-2.png)
+
+
 - Exemplo de **Remote Chunking:** Mostra como configurar o remote chunking usando Spring Integration.
   ```java
     EM PROGRESSO...
