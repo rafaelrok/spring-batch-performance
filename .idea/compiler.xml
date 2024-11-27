@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SimplePartitionerLocalJob2" />
+        <module name="CargaPlanilhasJob" />
         <module name="FaturaCartaoCreditoJob" />
         <module name="SimplePartitionerLocalJob" />
         <module name="ParallelStepsJob" />
@@ -23,6 +24,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="BdPartitionerLocalJob" options="-parameters" />
       <module name="BdPartitionerRemoteJob" options="-parameters" />
+      <module name="CargaPlanilhasJob" options="-parameters" />
       <module name="FaturaCartaoCreditoJob" options="-parameters" />
       <module name="MigracaoDadosJob" options="-parameters" />
       <module name="MultithreadingStep" options="-parameters" />
