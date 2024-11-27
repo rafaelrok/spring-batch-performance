@@ -19,14 +19,14 @@ public class DevolucaoReaderConfig {
 	public ItemReader<Devolucao> devolucaoReader() {
 		return new FlatFileItemReaderBuilder<Devolucao>()
 				.name("devolucaoReader")
-				.resource(new FileSystemResource("files/devolucoes.csv"))
+				.resource(new FileSystemResource("CargaPlanilhasJob/files/devolucoes.csv"))
 				.delimited()
 				.names("id", "data", "cliente", "valor")
 				.addComment("--")
 				.fieldSetMapper(mapper())
 				.build();
 	}
-	
+
 	private FieldSetMapper<Devolucao> mapper() {
 		return new FieldSetMapper<Devolucao>() {
 
@@ -39,7 +39,7 @@ public class DevolucaoReaderConfig {
 				devolucao.setValor(fieldSet.readBigDecimal("valor"));
 				return devolucao;
 			}
-		
+
 		};
 	}
 }

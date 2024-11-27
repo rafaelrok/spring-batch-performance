@@ -19,14 +19,14 @@ public class CompraReaderConfig {
 	public ItemReader<Compra> compraReader() {
 		return new FlatFileItemReaderBuilder<Compra>()
 				.name("compraReader")
-				.resource(new FileSystemResource("files/compras.csv"))
+				.resource(new FileSystemResource("CargaPlanilhasJob/files/compras.csv"))
 				.delimited()
 				.names("id", "data", "cliente", "valor")
 				.addComment("--")
 				.fieldSetMapper(mapper())
 				.build();
 	}
-	
+
 	private FieldSetMapper<Compra> mapper() {
 		return new FieldSetMapper<Compra>() {
 
@@ -39,7 +39,7 @@ public class CompraReaderConfig {
 				compra.setValor(fieldSet.readBigDecimal("valor"));
 				return compra;
 			}
-		
+
 		};
 	}
 }

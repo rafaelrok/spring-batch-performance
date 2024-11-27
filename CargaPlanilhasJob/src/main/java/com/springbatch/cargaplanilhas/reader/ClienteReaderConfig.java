@@ -14,7 +14,7 @@ public class ClienteReaderConfig {
 	public ItemReader<Cliente> clienteReader() {
 		return new FlatFileItemReaderBuilder<Cliente>()
 				.name("clienteReader")
-				.resource(new FileSystemResource("files/clientes.csv"))
+				.resource(new FileSystemResource("CargaPlanilhasJob/files/clientes.csv"))
 				.delimited()
 				.names("id", "nome", "cpf")
 				.addComment("--")

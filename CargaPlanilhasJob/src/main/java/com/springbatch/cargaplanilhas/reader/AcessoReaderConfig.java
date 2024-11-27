@@ -19,7 +19,7 @@ public class AcessoReaderConfig {
 	public ItemReader<Acesso> acessoReader() {
 		return new FlatFileItemReaderBuilder<Acesso>()
 				.name("acessoReader")
-				.resource(new FileSystemResource("files/acessos.csv"))
+				.resource(new FileSystemResource("CargaPlanilhasJob/files/acessos.csv"))
 				.delimited()
 				.names("id", "data", "cliente", "sistema")
 				.addComment("--")
@@ -39,7 +39,7 @@ public class AcessoReaderConfig {
 				acesso.setSistema(fieldSet.readInt("sistema"));
 				return acesso;
 			}
-		
+
 		};
 	}
 }
