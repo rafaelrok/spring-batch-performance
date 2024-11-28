@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.batch.item.database.ItemPreparedStatementSetter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -15,8 +16,22 @@ import org.springframework.context.annotation.Configuration;
 
 import com.springbatch.migracaodados.dominio.Pessoa;
 
+/**
+ * TODO: Classe responsável por escrever as informações de Pessoa no banco de dados.
+ * Configuração do writer para escrita no banco de dados
+ * Utilizado o AsyncItemWriter para escrita assíncrona no banco de dados e delegado para o bancoPessoaWriter
+ */
+
 @Configuration
 public class BancoPessoaWriterConfig {
+
+  @Bean
+  public AsyncItemWriter<Pessoa> asyncBancoPessoaWriter() {
+    AsyncItemWriter<Pessoa> asyncItemWriter = new AsyncItemWriter<>();
+    asyncItemWriter.setDelegate(bancoPessoaWriter(null));
+    return asyncItemWriter;
+  }
+
   @Bean
   public JdbcBatchItemWriter<Pessoa> bancoPessoaWriter(@Qualifier("appDataSource") DataSource dataSource) {
     return new JdbcBatchItemWriterBuilder<Pessoa>()

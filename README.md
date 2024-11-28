@@ -111,8 +111,9 @@ Dependendo das respostas, o fluxograma sugere diferentes estratégias de otimiza
 
 Este repositório inclui vários projetos de exemplo demonstrando as diferentes estratégias de otimização de performance:
 
-- Exemplo de **Steps Paralelos:** Demonstra como configurar e executar steps paralelos.
-  No Spring Batch, a estratégia de steps paralelos permite que múltiplos steps sejam executados simultaneamente, o que pode melhorar a performance do processamento de grandes volumes de dados. No seu projeto, isso é configurado usando o Flow e o SimpleAsyncTaskExecutor.  Aqui está um resumo de como isso funciona no seu projeto:  
+### Exemplo de `Steps Paralelos`: 
+Demonstra como configurar e executar steps paralelos.
+No Spring Batch, a estratégia de steps paralelos permite que múltiplos steps sejam executados simultaneamente, o que pode melhorar a performance do processamento de grandes volumes de dados. No seu projeto, isso é configurado usando o Flow e o SimpleAsyncTaskExecutor.  Aqui está um resumo de como isso funciona no seu projeto:  
   - Definição dos Steps: Você tem dois steps definidos, `migrarPessoaStep` e `migrarDadosBancariosStep`, que são responsáveis por processar dados de pessoas e dados bancários, respectivamente.  
   - Configuração dos `Flows`: Cada step é encapsulado em um Flow usando o FlowBuilder. Isso permite que os steps sejam gerenciados como unidades de trabalho independentes.  
   - Configuração do Executor: O `SimpleAsyncTaskExecutor` é usado para executar os flows em paralelo. Este executor cria novas threads para cada flow, permitindo que eles sejam executados simultaneamente.  
@@ -162,15 +163,146 @@ Este repositório inclui vários projetos de exemplo demonstrando as diferentes 
     ![Teste Steps Paralelos](resources/StepsParellelSequencial-2.png)
 
 
-- Exemplo de **Remote Chunking:** Mostra como configurar o remote chunking usando Spring Integration.
+### Exemplo de `Remote Chunking`: 
+Mostra como configurar o remote chunking usando Spring Integration.
   ```java
     EM PROGRESSO...
   ```
-- Exemplo de **Processamento Assíncrono:** Fornece um exemplo de execução de steps assíncronos.
-  ```java
-    EM PROGRESSO...
-  ```
-- Exemplo de **Multithreading:** Ilustra como usar multithreading dentro de um step.
+### Exemplo de `Processamento Assíncrono`: 
+Fornece um exemplo de execução de steps assíncronos.
+  A implementação de processamento assíncrono no Spring Batch pode melhorar significativamente a performance dos jobs, especialmente quando lidamos com grandes volumes de dados. A seguir, descrevo as principais adaptações feitas para melhorar a performance do job com base na sua implementação:  
+  - **AsyncItemProcessor**:  
+  Utilizado para processar itens de forma assíncrona.
+  Configurado com um `TaskExecutor` para controlar a quantidade de threads.
+  - **AsyncItemWriter**:  
+  Utilizado para escrever itens de forma assíncrona.
+  Delegado para um `JdbcBatchItemWriter` que escreve no banco de dados.
+  - **TaskExecutor**:
+  Configurado com um pool de threads para executar tarefas de forma paralela.
+  Utilizado tanto no `AsyncItemProcessor` quanto no Step para paralelizar o processamento e a escrita
+
+Aqui um FluxoGrama de como foi implementado o Processamento Assíncrono:
+![Fluxograma de Processamento Assíncrono](resources/AsyncProcessamentoFluxograma.png)
+
+Segue as implementações. Aqui está a refatoração da classe de processamento com a utilização da configuração Assíncrona: PessoaProcessorConfig.
+````java
+  @Configuration
+  public class PessoaProcessorConfig {
+  
+    private static final RestTemplate restTemplate = new RestTemplate();
+  
+    @Bean
+    public AsyncItemProcessor<Pessoa, Pessoa> asyncPessoaProcessor() {
+      AsyncItemProcessor<Pessoa, Pessoa> processor = new AsyncItemProcessor<>();
+      processor.setDelegate(pessoaProcessor());
+      processor.setTaskExecutor(taskExecutor());
+      return processor;
+    }
+  
+    private ItemProcessor<Pessoa, Pessoa> pessoaProcessor() {
+      return new ItemProcessor<Pessoa, Pessoa>() {
+  
+        @Override
+        public Pessoa process(Pessoa pessoa)  throws Exception {
+          try {
+              String uri = String.format("http://my-json-server.typicode.com/giuliana-bezerra/demo/profile/%d", pessoa.getId());
+              ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+              System.out.println(response.getBody());
+            } catch (RestClientResponseException e) {
+              System.out.println(pessoa.getId());
+            }
+          return pessoa;
+        }
+      };
+    }
+  
+    @Bean
+    public TaskExecutor taskExecutor() {
+      ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+      taskExecutor.setCorePoolSize(8);
+      taskExecutor.setMaxPoolSize(8);
+      taskExecutor.setQueueCapacity(8);
+      taskExecutor.setThreadNamePrefix("async-multiThreaded-");
+      taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+      return taskExecutor;
+    }
+  
+  }
+````
+Configuração Assíncrona da classe Writer:
+````java
+  @Configuration
+public class BancoPessoaWriterConfig {
+
+  @Bean
+  public AsyncItemWriter<Pessoa> asyncBancoPessoaWriter() {
+    AsyncItemWriter<Pessoa> asyncItemWriter = new AsyncItemWriter<>();
+    asyncItemWriter.setDelegate(bancoPessoaWriter(null));
+    return asyncItemWriter;
+  }
+
+  @Bean
+  public JdbcBatchItemWriter<Pessoa> bancoPessoaWriter(@Qualifier("appDataSource") DataSource dataSource) {
+    return new JdbcBatchItemWriterBuilder<Pessoa>()
+            .dataSource(dataSource)
+            .sql("INSERT INTO pessoa (id, nome, email, data_nascimento, idade) VALUES (?, ?, ?, ?, ?)")
+            .itemPreparedStatementSetter(itemPreparedStatementSetter())
+            .build();
+  }
+
+  private ItemPreparedStatementSetter<Pessoa> itemPreparedStatementSetter() {
+    return new ItemPreparedStatementSetter<Pessoa>() {
+
+      @Override
+      public void setValues(Pessoa pessoa, PreparedStatement ps) throws SQLException {
+        ps.setInt(1, pessoa.getId());
+        ps.setString(2, pessoa.getNome());
+        ps.setString(3, pessoa.getEmail());
+        ps.setDate(4, new Date(pessoa.getDataNascimento().getTime()));
+        ps.setInt(5, pessoa.getIdade());
+      }
+
+    };
+  }
+````
+Configuração do Step:
+````java
+  @Configuration
+public class MigrarPessoaStepConfig {
+
+  @Autowired
+  private StepBuilderFactory stepBuilderFactory;
+
+  @Autowired
+  @Qualifier("transactionManagerApp")
+  private PlatformTransactionManager transactionManagerApp;
+
+  @SuppressWarnings("unchecked")
+  @Bean
+  public Step migrarPessoaStep(ItemReader<Pessoa> arquivoPessoaReader,
+                               AsyncItemWriter<Pessoa> pessoaWriter,
+                               AsyncItemProcessor<Pessoa, Pessoa> pessoaProcessor) {
+    return ((SimpleStepBuilder<Pessoa, Pessoa>) stepBuilderFactory
+            .get("migrarPessoaStep")
+            .<Pessoa, Pessoa>chunk(1000)
+            .reader(arquivoPessoaReader)
+            .processor((ItemProcessor) pessoaProcessor)
+            .writer(pessoaWriter)
+            .transactionManager(transactionManagerApp))
+            .build();
+  }
+}
+````
+Essas adaptações permitem que o processamento e a escrita dos dados sejam realizados de forma paralela, utilizando múltiplas threads, o que resulta em uma melhoria significativa na performance do job.
+Segue a demonstração de impacto no desempenho do processamento de jobs assíncronos, onde o tempo estava em torno de `4m` para processar os 1000 clientes, após a implementação o tempo de processamento 
+foi reduzido para `30s`.
+#### Antes:
+![Teste Processamento Assíncrono](resources/ProcessamentoAsync-1.png)
+#### Depois da implementação:
+![Teste Processamento Assíncrono](resources/ProcessamentoAsync-2.png)
+
+### Exemplo de `Multithreading`: 
+Ilustra como usar multithreading dentro de um step.
 #### Classe de configuração do TaskExecutor: 
 ```java
   @Configuration
@@ -266,7 +398,8 @@ Antes da implementação do TaskExecutor, onde é possível observar o tempo de 
 Resultando após implementação do TaskExecutor, onde é possível observar o tempo de processamento reduzido de **`30s`** para **`9s`**. Isso em uma escala maior de produção poder reduzir em muito o tempo de processamento.
 ![Teste Multithreading](resources/multithreading-2.png)
 
-- Exemplo de **Partitioning Local:** Demonstra como particionar dados e processar partições em paralelo.
+### Exemplo de `Partitioning Local`: 
+Demonstra como particionar dados e processar partições em paralelo.
   ```java
     EM PROGRESSO...
   ```
