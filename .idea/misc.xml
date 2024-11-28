@@ -17,6 +17,7 @@
         <option value="$PROJECT_DIR$/SimplePartitionerLocalJob/pom.xml" />
         <option value="$PROJECT_DIR$/FaturaCartaoCreditoJob/pom.xml" />
         <option value="$PROJECT_DIR$/CargaPlanilhasJob/pom.xml" />
+        <option value="$PROJECT_DIR$/CompeticaoJob/pom.xml" />
       </list>
     </option>
   </component>

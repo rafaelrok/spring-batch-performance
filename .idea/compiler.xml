@@ -9,6 +9,7 @@
         <module name="SimplePartitionerLocalJob2" />
         <module name="CargaPlanilhasJob" />
         <module name="FaturaCartaoCreditoJob" />
+        <module name="CompeticaoJob" />
         <module name="SimplePartitionerLocalJob" />
         <module name="ParallelStepsJob" />
         <module name="MultithreadingStep" />
@@ -25,6 +26,7 @@
       <module name="BdPartitionerLocalJob" options="-parameters" />
       <module name="BdPartitionerRemoteJob" options="-parameters" />
       <module name="CargaPlanilhasJob" options="-parameters" />
+      <module name="CompeticaoJob" options="-parameters" />
       <module name="FaturaCartaoCreditoJob" options="-parameters" />
       <module name="MigracaoDadosJob" options="-parameters" />
       <module name="MultithreadingStep" options="-parameters" />
